@@ -27,10 +27,11 @@ export default function Hero() {
   return (
     <section
       ref={containerRef}
-      className="relative min-h-screen flex flex-col justify-between pt-[72px] overflow-hidden"
+      className="relative min-h-screen flex flex-col justify-between pt-[72px]"
+      style={{ isolation: "auto" }}
     >
       {/* YouTube background video — cover technique */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
+      <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 0 }}>
         <iframe
           src={`https://www.youtube-nocookie.com/embed/${VIDEO_ID}?autoplay=1&mute=1&loop=1&playlist=${VIDEO_ID}&controls=0&disablekb=1&fs=0&rel=0&showinfo=0&modestbranding=1&iv_load_policy=3&vq=hd1080&enablejsapi=1`}
           title="Hero background"
@@ -44,21 +45,26 @@ export default function Hero() {
           }}
           aria-hidden="true"
         />
-        {/* Dark overlay to keep text readable */}
+        {/* Dark overlay — lighter so bright video areas still punch through for blend mode */}
         <div
           className={`absolute inset-0 bg-[#0a0a0a] transition-opacity duration-1000 ${
-            videoReady ? "opacity-60" : "opacity-100"
+            videoReady ? "opacity-50" : "opacity-100"
           }`}
         />
       </div>
 
-      {/* Main heading — bleeds to left edge like locomotive.ca */}
-      <div className="relative z-10 flex-1 flex flex-col justify-center mt-8 md:mt-12 pl-6 md:pl-10 lg:pl-14">
+      {/* ── Heading with mix-blend-mode: difference ──────────────────────────
+          This div must NOT create a new stacking context (no z-index set),
+          so mix-blend-mode blends directly against the video+overlay below. */}
+      <div
+        className="relative flex-1 flex flex-col justify-center mt-8 md:mt-12 pl-6 md:pl-10 lg:pl-14"
+        style={{ mixBlendMode: "difference", zIndex: "auto" } as React.CSSProperties}
+      >
         <div className="overflow-hidden mb-0">
           <span
             ref={(el) => { linesRef.current[0] = el; }}
-            className="block font-[family-name:var(--font-cormorant)] font-light italic text-[clamp(72px,13.5vw,220px)] leading-[0.85] text-[#f0ede8] tracking-[-0.03em]"
-            style={{ display: "block" }}
+            className="block font-[family-name:var(--font-cormorant)] font-light italic text-[clamp(72px,13.5vw,220px)] leading-[0.85] tracking-[-0.03em]"
+            style={{ display: "block", color: "#ffffff" }}
           >
             An uncommon
           </span>
@@ -66,60 +72,56 @@ export default function Hero() {
         <div className="overflow-hidden mb-0">
           <span
             ref={(el) => { linesRef.current[1] = el; }}
-            className="block font-[family-name:var(--font-cormorant)] font-light italic text-[clamp(72px,13.5vw,220px)] leading-[0.85] text-[#f0ede8] tracking-[-0.03em]"
-            style={{ display: "block" }}
+            className="block font-[family-name:var(--font-cormorant)] font-light italic text-[clamp(72px,13.5vw,220px)] leading-[0.85] tracking-[-0.03em]"
+            style={{ display: "block", color: "#ffffff" }}
           >
             kind of studio.
           </span>
         </div>
 
-        {/* Sub info row */}
-        <div className="overflow-hidden mt-10 md:mt-14">
+        {/* Subtitle — outside the blend div so it keeps a fixed color */}
+        <div className="overflow-hidden mt-10 md:mt-14" style={{ mixBlendMode: "normal" }}>
           <span
             ref={(el) => { linesRef.current[2] = el; }}
             style={{ display: "block" }}
           >
-            <p className="font-[family-name:var(--font-inter)] text-[13px] md:text-[14px] font-light text-[rgba(240,237,232,0.5)] max-w-sm leading-relaxed">
+            <p className="font-[family-name:var(--font-inter)] text-[13px] md:text-[14px] font-light leading-relaxed max-w-sm" style={{ color: "rgba(240,237,232,0.55)" }}>
               A digital-first design agency with<br />off-the-charts dev skills.
             </p>
           </span>
         </div>
       </div>
 
-      {/* Bottom info bar */}
-      <div className="relative z-10 flex items-end justify-between pb-10 md:pb-14 px-6 md:px-10 lg:px-14">
+      {/* Bottom info bar — above video, no blend mode */}
+      <div
+        className="relative flex items-end justify-between pb-10 md:pb-14 px-6 md:px-10 lg:px-14"
+        style={{ zIndex: 2 }}
+      >
         <div className="overflow-hidden">
           <span
             ref={(el) => { linesRef.current[3] = el; }}
             style={{ display: "block" }}
           >
             <div className="flex items-center gap-8">
-              <div>
-                <p className="font-[family-name:var(--font-inter)] text-[10px] uppercase tracking-[0.2em] text-[rgba(240,237,232,0.35)] mb-1">
-                  Founded
-                </p>
-                <p className="font-[family-name:var(--font-cormorant)] text-[22px] font-light text-[#f0ede8]">
-                  2008
-                </p>
-              </div>
-              <div className="w-px h-8 bg-[rgba(240,237,232,0.12)]" />
-              <div>
-                <p className="font-[family-name:var(--font-inter)] text-[10px] uppercase tracking-[0.2em] text-[rgba(240,237,232,0.35)] mb-1">
-                  Based in
-                </p>
-                <p className="font-[family-name:var(--font-cormorant)] text-[22px] font-light text-[#f0ede8]">
-                  Montréal
-                </p>
-              </div>
-              <div className="w-px h-8 bg-[rgba(240,237,232,0.12)]" />
-              <div>
-                <p className="font-[family-name:var(--font-inter)] text-[10px] uppercase tracking-[0.2em] text-[rgba(240,237,232,0.35)] mb-1">
-                  Awwwards
-                </p>
-                <p className="font-[family-name:var(--font-cormorant)] text-[22px] font-light text-[#f0ede8]">
-                  6× AOTY
-                </p>
-              </div>
+              {[
+                { label: "Founded", value: "2008" },
+                { label: "Based in", value: "Montréal" },
+                { label: "Awwwards", value: "6× AOTY" },
+              ].map((stat, i, arr) => (
+                <div key={stat.label} className="flex items-center gap-8">
+                  <div>
+                    <p className="font-[family-name:var(--font-inter)] text-[10px] uppercase tracking-[0.2em] mb-1" style={{ color: "rgba(240,237,232,0.35)" }}>
+                      {stat.label}
+                    </p>
+                    <p className="font-[family-name:var(--font-cormorant)] text-[22px] font-light" style={{ color: "#f0ede8" }}>
+                      {stat.value}
+                    </p>
+                  </div>
+                  {i < arr.length - 1 && (
+                    <div className="w-px h-8" style={{ background: "rgba(240,237,232,0.12)" }} />
+                  )}
+                </div>
+              ))}
             </div>
           </span>
         </div>
@@ -135,11 +137,20 @@ export default function Hero() {
               className="flex flex-col items-center gap-3 group"
               aria-label="Scroll to work"
             >
-              <span className="font-[family-name:var(--font-inter)] text-[10px] uppercase tracking-[0.2em] text-[rgba(240,237,232,0.35)] group-hover:text-[rgba(240,237,232,0.7)] transition-colors">
+              <span
+                className="font-[family-name:var(--font-inter)] text-[10px] uppercase tracking-[0.2em] group-hover:opacity-70 transition-opacity"
+                style={{ color: "rgba(240,237,232,0.35)" }}
+              >
                 Scroll
               </span>
-              <div className="w-px h-12 bg-[rgba(240,237,232,0.2)] relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-full bg-[rgba(240,237,232,0.7)] animate-[slideDown_1.8s_ease_infinite]" />
+              <div className="w-px h-12 relative overflow-hidden" style={{ background: "rgba(240,237,232,0.2)" }}>
+                <div
+                  className="absolute top-0 left-0 w-full h-full"
+                  style={{
+                    background: "rgba(240,237,232,0.7)",
+                    animation: "slideDown 1.8s ease infinite",
+                  }}
+                />
               </div>
             </Link>
           </span>
