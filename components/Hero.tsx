@@ -1,11 +1,14 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+
+const VIDEO_ID = "Pk7eBbD_dhc";
 
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
   const linesRef = useRef<(HTMLSpanElement | null)[]>([]);
+  const [videoReady, setVideoReady] = useState(false);
 
   useEffect(() => {
     const lines = linesRef.current.filter(Boolean) as HTMLSpanElement[];
@@ -24,10 +27,33 @@ export default function Hero() {
   return (
     <section
       ref={containerRef}
-      className="relative min-h-screen flex flex-col justify-between pt-[72px]"
+      className="relative min-h-screen flex flex-col justify-between pt-[72px] overflow-hidden"
     >
+      {/* YouTube background video — cover technique */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <iframe
+          src={`https://www.youtube-nocookie.com/embed/${VIDEO_ID}?autoplay=1&mute=1&loop=1&playlist=${VIDEO_ID}&controls=0&disablekb=1&fs=0&rel=0&showinfo=0&modestbranding=1&iv_load_policy=3&vq=hd1080&enablejsapi=1`}
+          title="Hero background"
+          allow="autoplay; encrypted-media"
+          onLoad={() => setVideoReady(true)}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+          style={{
+            width: "max(100vw, 177.78vh)",
+            height: "max(100vh, 56.25vw)",
+            border: "none",
+          }}
+          aria-hidden="true"
+        />
+        {/* Dark overlay to keep text readable */}
+        <div
+          className={`absolute inset-0 bg-[#0a0a0a] transition-opacity duration-1000 ${
+            videoReady ? "opacity-60" : "opacity-100"
+          }`}
+        />
+      </div>
+
       {/* Main heading — bleeds to left edge like locomotive.ca */}
-      <div className="flex-1 flex flex-col justify-center mt-8 md:mt-12 pl-6 md:pl-10 lg:pl-14">
+      <div className="relative z-10 flex-1 flex flex-col justify-center mt-8 md:mt-12 pl-6 md:pl-10 lg:pl-14">
         <div className="overflow-hidden mb-0">
           <span
             ref={(el) => { linesRef.current[0] = el; }}
@@ -61,7 +87,7 @@ export default function Hero() {
       </div>
 
       {/* Bottom info bar */}
-      <div className="flex items-end justify-between pb-10 md:pb-14 px-6 md:px-10 lg:px-14">
+      <div className="relative z-10 flex items-end justify-between pb-10 md:pb-14 px-6 md:px-10 lg:px-14">
         <div className="overflow-hidden">
           <span
             ref={(el) => { linesRef.current[3] = el; }}
