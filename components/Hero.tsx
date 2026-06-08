@@ -24,23 +24,23 @@ export default function Hero() {
   return (
     <section
       ref={containerRef}
-      className="relative min-h-screen flex flex-col justify-between px-8 md:px-12 lg:px-16 pt-[72px]"
+      className="relative min-h-screen flex flex-col justify-between pt-[72px]"
     >
-      {/* Main heading */}
-      <div className="flex-1 flex flex-col justify-center mt-12 md:mt-16">
-        <div className="overflow-hidden mb-4 md:mb-0">
+      {/* Main heading — bleeds to left edge like locomotive.ca */}
+      <div className="flex-1 flex flex-col justify-center mt-8 md:mt-12 pl-6 md:pl-10 lg:pl-14">
+        <div className="overflow-hidden mb-0">
           <span
             ref={(el) => { linesRef.current[0] = el; }}
-            className="block font-[family-name:var(--font-cormorant)] font-light italic text-[clamp(64px,10vw,160px)] leading-[0.88] text-[#f0ede8] tracking-[-0.02em]"
+            className="block font-[family-name:var(--font-cormorant)] font-light italic text-[clamp(72px,13.5vw,220px)] leading-[0.85] text-[#f0ede8] tracking-[-0.03em]"
             style={{ display: "block" }}
           >
             An uncommon
           </span>
         </div>
-        <div className="overflow-hidden mb-4 md:mb-0">
+        <div className="overflow-hidden mb-0">
           <span
             ref={(el) => { linesRef.current[1] = el; }}
-            className="block font-[family-name:var(--font-cormorant)] font-light italic text-[clamp(64px,10vw,160px)] leading-[0.88] text-[#f0ede8] tracking-[-0.02em]"
+            className="block font-[family-name:var(--font-cormorant)] font-light italic text-[clamp(72px,13.5vw,220px)] leading-[0.85] text-[#f0ede8] tracking-[-0.03em]"
             style={{ display: "block" }}
           >
             kind of studio.
@@ -61,7 +61,7 @@ export default function Hero() {
       </div>
 
       {/* Bottom info bar */}
-      <div className="flex items-end justify-between pb-10 md:pb-14">
+      <div className="flex items-end justify-between pb-10 md:pb-14 px-6 md:px-10 lg:px-14">
         <div className="overflow-hidden">
           <span
             ref={(el) => { linesRef.current[3] = el; }}
