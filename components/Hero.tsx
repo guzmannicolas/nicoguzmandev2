@@ -45,26 +45,32 @@ export default function Hero() {
           }}
           aria-hidden="true"
         />
-        {/* Dark overlay — lighter so bright video areas still punch through for blend mode */}
+        {/* Minimal overlay — only to cover before video loads, then near-transparent
+            so the full video color range activates the difference blend on the text */}
         <div
-          className={`absolute inset-0 bg-[#0a0a0a] transition-opacity duration-1000 ${
-            videoReady ? "opacity-50" : "opacity-100"
+          className={`absolute inset-0 bg-[#0a0a0a] transition-opacity duration-1500 ${
+            videoReady ? "opacity-15" : "opacity-100"
           }`}
         />
       </div>
 
-      {/* ── Heading with mix-blend-mode: difference ──────────────────────────
-          This div must NOT create a new stacking context (no z-index set),
-          so mix-blend-mode blends directly against the video+overlay below. */}
+      {/* ── Heading — mix-blend-mode applied per-span ───────────────────────
+          Each span individually blends against the video behind it.
+          The container has no z-index (no new stacking context), letting
+          blend mode reach through to the video+overlay composite. */}
       <div
         className="relative flex-1 flex flex-col justify-center mt-8 md:mt-12 pl-6 md:pl-10 lg:pl-14"
-        style={{ mixBlendMode: "difference", zIndex: "auto" } as React.CSSProperties}
+        style={{ zIndex: "auto" } as React.CSSProperties}
       >
         <div className="overflow-hidden mb-0">
           <span
             ref={(el) => { linesRef.current[0] = el; }}
             className="block font-[family-name:var(--font-cormorant)] font-light italic text-[clamp(72px,13.5vw,220px)] leading-[0.85] tracking-[-0.03em]"
-            style={{ display: "block", color: "#ffffff" }}
+            style={{
+              display: "block",
+              color: "#ffffff",
+              mixBlendMode: "difference",
+            }}
           >
             An uncommon
           </span>
@@ -73,19 +79,26 @@ export default function Hero() {
           <span
             ref={(el) => { linesRef.current[1] = el; }}
             className="block font-[family-name:var(--font-cormorant)] font-light italic text-[clamp(72px,13.5vw,220px)] leading-[0.85] tracking-[-0.03em]"
-            style={{ display: "block", color: "#ffffff" }}
+            style={{
+              display: "block",
+              color: "#ffffff",
+              mixBlendMode: "difference",
+            }}
           >
             kind of studio.
           </span>
         </div>
 
-        {/* Subtitle — outside the blend div so it keeps a fixed color */}
-        <div className="overflow-hidden mt-10 md:mt-14" style={{ mixBlendMode: "normal" }}>
+        {/* Subtitle — normal blend, fixed cream color */}
+        <div className="overflow-hidden mt-10 md:mt-14">
           <span
             ref={(el) => { linesRef.current[2] = el; }}
             style={{ display: "block" }}
           >
-            <p className="font-[family-name:var(--font-inter)] text-[13px] md:text-[14px] font-light leading-relaxed max-w-sm" style={{ color: "rgba(240,237,232,0.55)" }}>
+            <p
+              className="font-[family-name:var(--font-inter)] text-[13px] md:text-[14px] font-light leading-relaxed max-w-sm"
+              style={{ color: "rgba(240,237,232,0.7)" }}
+            >
               A digital-first design agency with<br />off-the-charts dev skills.
             </p>
           </span>
